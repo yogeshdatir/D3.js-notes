@@ -10,6 +10,13 @@ var svg = d3.select('svg')
     .attr("width", svgWidth)
     .attr("height", svgHeight);
     
+// adjust/resize the height of the bars
+var yScale = d3.scaleLinear()
+	// max y axis value
+    .domain([0, d3.max(dataset)])
+	// limit for the adjustment
+    .range([0, svgHeight]);
+    
 var barChart = svg.selectAll("rect")
     .data(dataset)
     // after applying this method following methods is called for each dataset element
@@ -17,12 +24,14 @@ var barChart = svg.selectAll("rect")
     // to append rectangle element for each dataset element as this is bar chart
     .append("rect")
 	// y attribute start rectangle or bar at svgHeight - d = 300 - 80 = 220 (svg graph y axis starts from top to bottom.)
+	// need to change y axis size with adjusted data element due to scale
     .attr("y", function(d) {
-         return svgHeight - d 
+         return svgHeight - yScale(d) 
     })						
 	// height attribute specifies height of the bar i.e. 80 from 220
+	// need to change height of the bar with adjusted data element due to scale
     .attr("height", function(d) { 
-        return d; 
+        return yScale(d); 
     })
     .attr("width", barWidth - barPadding)
 	// transform - translate moves every bar to the left of previous one. without this bars overlap each other showing single tallest bar.
@@ -42,8 +51,9 @@ var text = svg.selectAll("text")
         return d;
     })
     // the vertical position of label text - here it's 3 units above the bar
+	// need to change y axis size with adjusted data element due to scale
     .attr("y", function(d, i) {
-        return svgHeight - d - 3;
+        return svgHeight - yScale(d) + 15;
     })
     // the horizontal position of the label text - here it's same as the bar position
     .attr("x", function(d, i) {
