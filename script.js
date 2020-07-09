@@ -2,7 +2,7 @@
 var dataset = [80, 100, 56, 120, 180, 30, 40, 120, 160];
 
 // barPadding is padding between 2 bars
-var svgWidth = 500, svgHeight = 300, barPadding = 5;
+var svgWidth = 500, svgHeight = 300, barPadding = 2;
 var barWidth = (svgWidth / dataset.length);
 
 
@@ -16,6 +16,14 @@ var yScale = d3.scaleLinear()
     .domain([0, d3.max(dataset)])
 	// limit for the adjustment
     .range([0, svgHeight]);
+    
+// adjust/resize the width of the bars
+var xScale = d3.scaleBand()
+    .domain(dataset.map(function(d) {return d}))
+    // limit for the adjustment
+    .range([0, svgWidth])
+    .paddingInner(0.3)
+    .paddingOuter(0.3)
     
 var barChart = svg.selectAll("rect")
     .data(dataset)

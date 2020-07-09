@@ -19,6 +19,14 @@ var yScale = d3.scaleLinear()
     .domain([0, d3.max(dataset)])
 	// limit for the adjustment
     .range([0, svgHeight]);
+
+// adjust/resize the width of the bars
+var xScale = d3.scaleBand()
+    .domain(dataset.map(function(d) {return d}))
+    // limit for the adjustment
+    .range([0, svgWidth])
+    .paddingInner(0.3)
+    .paddingOuter(0.3)
     
 var barChart = svg.selectAll("rect")
     .data(dataset)
@@ -54,6 +62,7 @@ var text = svg.selectAll("text")
         return d;
     })
     // the vertical position of label text - here it's 3 units above the bar
+	// need to change y axis size with adjusted data element due to scale
     .attr("y", function(d, i) {
         return svgHeight - yScale(d) + 15;
     })
