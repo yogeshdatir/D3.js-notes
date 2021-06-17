@@ -44,7 +44,8 @@
       export default BarChart;
       ```
 
-      
+   3. Adding const for selection should be done carefully.
+      When you are using const selection, **append function will add new element inside of that selection**.
 
 
 
