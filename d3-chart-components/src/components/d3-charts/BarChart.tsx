@@ -46,7 +46,7 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
         // .domain(domainExtents)
         .domain([0, max])
         // if y axis is flipped, check bellow function argument
-        .rangeRound([calculatedHeight,0])
+        .rangeRound([calculatedHeight, 0])
         .nice()
         .clamp(true);
 
@@ -55,7 +55,20 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
       ctr
         .selectAll("rect")
         .data(data)
-        .join("rect")
+        // enter function is added for transition, to set the starting positions for transtion
+        .join((enter: any) =>
+          enter
+            .append("rect")
+            .attr("x", (d: any) => xScale(d.name) || "")
+            // here y is changed, to start the transition from bottom
+            .attr("y", calculatedHeight)
+            .attr("width", xScale.bandwidth())
+            // here height is changed to 0, to set starting point of bars from x axis
+            .attr("height", 0)
+            .attr("fill", "orange")
+        )
+        .transition()
+        .duration(1000)
         .attr("x", (d: any) => xScale(d.name) || "")
         .attr("y", (d: any) => yScale(d.pv))
         .attr("width", xScale.bandwidth())
@@ -65,24 +78,39 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
         // .attr("height", (d: any) => yScale(d.pv))
         .attr("fill", "orange");
 
+      ctr
+        .append("g")
+        .classed("bar-labels", true)
+        .selectAll("text")
+        .data(data)
+        .join("text")
+        // Todo: Figure out better way to position labels
+        .attr(
+          "x",
+          (d: any) =>
+            (xScale(d.name) || 0) + xScale.bandwidth() - margin.right - 7
+        )
+        .attr("y", (d: any) => yScale(yAccessor(d)) - 10)
+        .text(yAccessor);
+
       // d3 axisBottom or axisLeft have tick(), tickValues(), tickFormat() functions which can be handy.
-      // e.g. tickFormat((d: any) => d*100+"%") 
+      // e.g. tickFormat((d: any) => d*100+"%")
 
       // X axis
-      const xAxis = d3.axisBottom(xScale) ;
+      const xAxis = d3.axisBottom(xScale);
 
       const xAxisGroup = ctr
         .append("g")
         .style("transform", `translateY(${calculatedHeight}px)`)
         .call(xAxis)
-        .classed("axis", true)
+        .classed("axis", true);
 
-        // following code to rotate x axis ticks text doesn't x axis label to append, need to fix that
-        // .selectAll("text")
-        // .attr("x", 20)
-        // .attr("y", 30)
-        // .attr('dy', 0.5)
-        // .style("transform", "rotate(45deg)");
+      // Todo: following code to rotate x axis ticks text doesn't x axis label to append, need to fix that
+      // .selectAll("text")
+      // .attr("x", 20)
+      // .attr("y", 30)
+      // .attr('dy', 0.5)
+      // .style("transform", "rotate(45deg)");
 
       // X axis label
 
@@ -115,7 +143,17 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
     };
 
     data && draw();
-  }, [calculatedHeight, calculatedWidth, data, height, margin.bottom, margin.left, margin.right, margin.top, width]);
+  }, [
+    calculatedHeight,
+    calculatedWidth,
+    data,
+    height,
+    margin.bottom,
+    margin.left,
+    margin.right,
+    margin.top,
+    width,
+  ]);
 
   return (
     <div className="chart">

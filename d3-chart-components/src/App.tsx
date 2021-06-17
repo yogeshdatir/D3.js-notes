@@ -24,7 +24,7 @@ function App() {
     axios
       .get("https://memories-node-react.herokuapp.com/chartData")
       .then((res: any) => {
-        setChartData(res.data);
+        setChartData(res.data.data);
         setLoading(false);
       });
   };
