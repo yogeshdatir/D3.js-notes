@@ -72,10 +72,11 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
               .attr("width", xScale.bandwidth())
               // here height is changed to 0, to set starting point of bars from x axis
               .attr("height", 0)
-              .attr("fill", "orange"),
+              .attr("fill", "#b8de6f"),
           (update: any) => update,
           (exit: any) =>
             exit
+              .attr("fill", "#f39233")
               .transition(exitTransition)
               .attr("y", calculatedHeight)
               .attr("height", 0)
@@ -91,12 +92,28 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
         // .attr("height", (d: any) => yScale(d.pv))
         .attr("fill", "orange");
 
+      // Data point labels
+
       ctr
         .append("g")
         .classed("bar-labels", true)
         .selectAll("text")
         .data(data)
-        .join("text")
+        .join(
+          (enter: any) =>
+            enter
+              .append("text")
+              .attr(
+                "x",
+                (d: any) =>
+                  (xScale(d.name) || 0) + xScale.bandwidth() - margin.right - 7
+              )
+              .attr("y", calculatedHeight)
+              .text(yAccessor),
+          (update: any) => update,
+          (exit: any) => exit.transition(exitTransition).attr("y", calculatedHeight).remove()
+        )
+        .transition(updateTransition)
         // Todo: Figure out better way to position labels
         .attr(
           "x",
