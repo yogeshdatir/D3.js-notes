@@ -52,23 +52,36 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
 
       // Add the bars
 
+      // exit transition is not mandatory
+      // Todo: research when is the exit transition needed.
+      const exitTransition = d3.transition().duration(500);
+
+      const updateTransition: any = exitTransition.transition().duration(500);
+
       ctr
         .selectAll("rect")
         .data(data)
-        // enter function is added for transition, to set the starting positions for transtion
-        .join((enter: any) =>
-          enter
-            .append("rect")
-            .attr("x", (d: any) => xScale(d.name) || "")
-            // here y is changed, to start the transition from bottom
-            .attr("y", calculatedHeight)
-            .attr("width", xScale.bandwidth())
-            // here height is changed to 0, to set starting point of bars from x axis
-            .attr("height", 0)
-            .attr("fill", "orange")
+        // enter function is added for transition, to set the starting positions for transition
+        .join(
+          (enter: any) =>
+            enter
+              .append("rect")
+              .attr("x", (d: any) => xScale(d.name) || "")
+              // here y is changed, to start the transition from bottom
+              .attr("y", calculatedHeight)
+              .attr("width", xScale.bandwidth())
+              // here height is changed to 0, to set starting point of bars from x axis
+              .attr("height", 0)
+              .attr("fill", "orange"),
+          (update: any) => update,
+          (exit: any) =>
+            exit
+              .transition(exitTransition)
+              .attr("y", calculatedHeight)
+              .attr("height", 0)
+              .remove()
         )
-        .transition()
-        .duration(1000)
+        .transition(updateTransition)
         .attr("x", (d: any) => xScale(d.name) || "")
         .attr("y", (d: any) => yScale(d.pv))
         .attr("width", xScale.bandwidth())
