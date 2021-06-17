@@ -111,7 +111,8 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
               .attr("y", calculatedHeight)
               .text(yAccessor),
           (update: any) => update,
-          (exit: any) => exit.transition(exitTransition).attr("y", calculatedHeight).remove()
+          (exit: any) =>
+            exit.transition(exitTransition).attr("y", calculatedHeight).remove()
         )
         .transition(updateTransition)
         // Todo: Figure out better way to position labels
@@ -170,6 +171,20 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
         .attr("fill", "#000")
         .text("Proposed Value")
         .style("transform", "rotate(270deg)");
+
+      // Mean line
+      const meanLine = ctr.append("line").classed("mean-line", true);
+
+      const mean: any = d3.mean(data, yAccessor);
+
+      // Todo: learn about raise() in d3
+
+      meanLine
+        .transition(updateTransition)
+        .attr("x1", margin.left)
+        .attr("y1", yScale(mean))
+        .attr("x2", calculatedWidth)
+        .attr("y2", yScale(mean));
     };
 
     data && draw();
