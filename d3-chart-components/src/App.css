@@ -46,6 +46,12 @@
   justify-content: space-evenly;
 }
 
+.chart{
+  background-color: #f7f7f7;
+  margin: 25px auto;
+  position: relative
+}
+
 .axis {
   font-size: 18px;
   shape-rendering: geometricPrecision;
@@ -61,4 +67,29 @@
   stroke: #d62828;
   stroke-dasharray: 6;
   stroke-width: 2px;
+}
+
+#tooltip {
+  text-align: center;
+  border: 1px solid #ccc;
+  position: absolute;
+  padding: 10px;
+  color: white;
+  background-color: #555;
+  display: none;
+}
+
+#tooltip .data-name {
+  text-decoration: underline;
+}
+
+#tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
 }

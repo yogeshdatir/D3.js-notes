@@ -30,6 +30,8 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
         .append("g")
         .style("transform", `translate(${margin.left}px, ${margin.top}px)`);
 
+      const tooltip = d3.select("#tooltip");
+
       // Scales
       const domainExtents: any = d3.extent(data, yAccessor);
 
@@ -82,6 +84,31 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
               .attr("height", 0)
               .remove()
         )
+        .on("mouseenter", function (event: any, datum: any) {
+          d3.select(this).attr("fill", "#ff0000");
+
+          // Todo: checkout d3.format()
+
+          tooltip
+            .style("display", "block")
+            .style("top", yScale(yAccessor(datum)) - 110 + "px")
+            // Note: while positioning in d3, take translation properties, margins into consideration.
+            // here xScale(xAccessor(datum)) gives left start x position of bar and xScale.bandwidth() gives width of each bar which is dynamic.
+            .style("left", (xScale(xAccessor(datum)) || 0) + 60 - (xScale.bandwidth()/2) + 10 + "px");
+            console.log(
+              (xScale(xAccessor(datum)) || 0), xScale.bandwidth() / 2
+            );
+
+          tooltip.select('.data-name span').text(xAccessor(datum))
+          tooltip.select(".data-amt span").text(datum.amt)
+          tooltip.select(".data-uv span").text(datum.uv)
+          tooltip.select(".data-pv span").text(yAccessor(datum));
+        })
+        .on("mouseleave", function (event: any,datum: any) {
+          d3.select(this).attr('fill', 'orange')
+
+          tooltip.style("display", 'none')
+        })
         .transition(updateTransition)
         .attr("x", (d: any) => xScale(d.name) || "")
         .attr("y", (d: any) => yScale(d.pv))
@@ -202,6 +229,20 @@ const BarChart = ({ height = 500, width = 800, data }: Props) => {
 
   return (
     <div className="chart">
+      <div id="tooltip">
+        <div className="data-name">
+          Name: <span></span>
+        </div>
+        <div className="data-amt">
+          Amount: <span></span>
+        </div>
+        <div className="data-uv">
+          UV: <span></span>
+        </div>
+        <div className="data-pv">
+          PV: <span></span>
+        </div>
+      </div>
       <svg ref={ref}></svg>
     </div>
   );
