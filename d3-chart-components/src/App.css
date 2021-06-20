@@ -49,11 +49,11 @@
 .chart{
   background-color: #f7f7f7;
   margin: 25px auto;
-  position: relative
+  position: relative;
 }
 
 .axis {
-  font-size: 18px;
+  font-size: 14px;
   shape-rendering: geometricPrecision;
 }
 
@@ -61,6 +61,7 @@
   text-anchor: middle;
   font-size: 16px;
   font-family: sans-serif;
+  shape-rendering: geometricPrecision;
 }
 
 .mean-line {
