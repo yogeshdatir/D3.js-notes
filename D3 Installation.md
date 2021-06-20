@@ -62,3 +62,14 @@
 
 2. scaleLinear() is for continuous data.
 
+
+## Responsive Chart
+To make chart responsive add viewBox attribute to the main svg.
+
+```
+const svg = d3.select("#chart")
+.append('svg')
+.attr('viewBox', '0 0 ${height} ${width}')
+```
+
+You can try this article: https://www.sarasoueidan.com/blog/svg-coordinate-systems/

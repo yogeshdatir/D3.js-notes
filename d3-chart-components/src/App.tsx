@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import BarChart from './components/d3-charts/BarChart'
+import LineChart from "./components/d3-charts/LineChart";
 import axios from "axios";
 
 function App() {
@@ -10,7 +10,8 @@ function App() {
   useEffect(() => {
     const getData = () => {
       axios
-        .get("https://memories-node-react.herokuapp.com/chartData")
+        // .get("https://memories-node-react.herokuapp.com/chartData")
+        .get("https://memories-node-react.herokuapp.com/chartData/linechartdata")
         .then((res: any) => {
           setChartData(res.data.data);
           setLoading(false);
@@ -22,7 +23,8 @@ function App() {
   const changeData = () => {
     setLoading(true);
     axios
-      .get("https://memories-node-react.herokuapp.com/chartData")
+      // .get("https://memories-node-react.herokuapp.com/chartData")
+      .get("https://memories-node-react.herokuapp.com/chartData/linechartdata")
       .then((res: any) => {
         setChartData(res.data.data);
         setLoading(false);
@@ -32,7 +34,7 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-        {!loading && <BarChart data={chartData} />}
+        {!loading && <LineChart data={chartData} />}
       </div>
       <button onClick={changeData}>Change Data</button>
     </div>
