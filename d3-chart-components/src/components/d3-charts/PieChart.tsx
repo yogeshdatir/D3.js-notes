@@ -10,7 +10,7 @@ interface Props {
   data: any;
 }
 
-const LineChart = ({
+const PieChart = ({
   dimensions = {
     height: 500,
     width: 800,
@@ -53,4 +53,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default PieChart;
