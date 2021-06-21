@@ -83,6 +83,7 @@ const LineChart = ({
         .rangeRound([containerHeight, 0])
         .nice();
 
+      // Draw line
       const lineGenerator = d3
         .line()
         .x((d: any) => xScale(xAccessor(d)))
@@ -129,7 +130,8 @@ const LineChart = ({
 
       ctr.append("g").call(yAxis).classed("axis", true);
 
-      //Tooltip
+      // Tooltip surface for interaction
+      // Create a rect on top of the svg area: this rectangle recovers mouse position
 
       ctr
         .append("rect")
@@ -137,10 +139,14 @@ const LineChart = ({
         .attr("height", containerHeight)
         .style("opacity", 0)
         .on("touchmouse mousemove", function (event: any) {
+          // recover coordinate we need
           const mousePos = d3.pointer(event, this);
+          // get the date (x axis data-point) corresponding to the mouse x-coordinate
           const date = xScale.invert(mousePos[0]);
 
+          // create custom bisector so that d3 can sort array of objects to locate the correct index
           const bisector = d3.bisector(xAccessor).left;
+          // get the index nearest to the mouse co-ordinates
           const index = bisector(data, date);
           const stock = data[index - 1];
 
